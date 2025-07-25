@@ -1,40 +1,71 @@
-// Copy this code into your Cloudflare Worker script
-
 export default {
   async fetch(request, env) {
     const corsHeaders = {
-      'Access-Control-Allow-Origin': '*',
-      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type',
-      'Content-Type': 'application/json'
+      'Access-Control-Allow-Origin': '*', // Or specify your frontend origin
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     };
 
-    // Handle CORS preflight requests
+    // Handle preflight OPTIONS request
     if (request.method === 'OPTIONS') {
-      return new Response(null, { headers: corsHeaders });
+      return new Response(null, {
+        status: 204,
+        headers: corsHeaders,
+      });
     }
 
-    const apiKey = env.OPENAI_API_KEY; // Make sure to name your secret OPENAI_API_KEY in the Cloudflare Workers dashboard
-    const apiUrl = 'https://api.openai.com/v1/chat/completions';
-    const userInput = await request.json();
+    // Get OpenAI API key from environment variable
+    const apiKey = env.OPENAI_API_KEY;
+    const apiUrl = "https://api.openai.com/v1/chat/completions";
 
+    let userInput;
+    try {
+      userInput = await request.json();
+    } catch (err) {
+      return new Response(JSON.stringify({ error: "Invalid JSON input" }), {
+        status: 400,
+        headers: corsHeaders,
+      });
+    }
+
+    // Validate messages array
+    if (!userInput || !Array.isArray(userInput.messages)) {
+      return new Response(
+        JSON.stringify({ error: "Missing or invalid messages array" }),
+        {
+          status: 400,
+          headers: corsHeaders,
+        }
+      );
+    }
+
+    // Prepare the payload for OpenAI API
     const requestBody = {
-      model: 'gpt-4o',
+      model: "gpt-4o",
       messages: userInput.messages,
-      max_completion_tokens: 300,
+      max_tokens: 400,
+      temperature: 1,
     };
 
-    const response = await fetch(apiUrl, {
-      method: 'POST',
+    // Send the request to OpenAI
+    const openaiResponse = await fetch(apiUrl, {
+      method: "POST",
       headers: {
-        'Authorization': `Bearer ${apiKey}`,
-        'Content-Type': 'application/json'
+        Authorization: `Bearer ${apiKey}`,
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify(requestBody)
+      body: JSON.stringify(requestBody),
     });
 
-    const data = await response.json();
+    const data = await openaiResponse.json();
 
-    return new Response(JSON.stringify(data), { headers: corsHeaders });
+    return new Response(JSON.stringify(data), {
+      status: openaiResponse.status,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+      },
+    });
   }
 };
+
