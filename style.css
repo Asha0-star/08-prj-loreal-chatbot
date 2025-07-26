@@ -3,11 +3,12 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: "Helvetica", sans-serif;
 }
 
 /* —— body + fonts —— */
 body {
-  font-family: "Montserrat", Arial, Helvetica, sans-serif;
+  font-family: "Helvetica", Helvetica, sans-serif;
   color: #333;
   display: flex;
   justify-content: center;
@@ -36,8 +37,9 @@ body {
 }
 
 .chat-window {
-  height: 360px;
-  border: 1px solid #000;
+  height: 400px;
+  border: 1px solid transparent;
+  border-image: linear-gradient(#000000, #e3a535) 1;
   padding: 20px;
   font-size: 18px;
   line-height: 1.5;
@@ -48,16 +50,35 @@ body {
 
 /* messages */
 .msg {
-  margin-bottom: 14px;
+  margin-bottom: 20px; /* Space between messages */
+  padding: 10px; /* Padding around each message */
+  border-radius: 8px; /* Rounded corners for better aesthetics */
   line-height: 1.5;
 }
 
 .msg.user {
-  color: #000;
+  background-color: #f0f0f0; /* Light background for user messages */
+  color: #000; /* Black text for user messages */
 }
 
 .msg.ai {
-  color: #666666;
+  background-color: #e8e8e8; /* Slightly darker background for chatbot messages */
+  color: #666666; /* Gray text for chatbot messages */
+}
+
+/* Add spacing for labels */
+.msg.user::before {
+  content: "You:";
+  display: block;
+  font-weight: bold;
+  margin-bottom: 4px; /* Space between label and message */
+}
+
+.msg.ai::before {
+  content: "L'OrealBot:";
+  display: block;
+  font-weight: bold;
+  margin-bottom: 4px; /* Space between label and message */
 }
 
 /* input row */
@@ -84,6 +105,7 @@ body {
   background: #000;
   color: #fff;
   border: none;
+  border-radius: 50%;
   padding: 12px;
   width: 48px;
   height: 48px;
@@ -99,7 +121,7 @@ body {
 }
 
 .chat-form button:hover {
-  background: #666666;
+  background-image: linear-gradient(to right, #000, #e3a535);
 }
 
 .chat-form button:focus {
@@ -126,6 +148,9 @@ body {
   text-align: center;
   font-size: 14px;
   color: #666;
+  background-color: #000000;
+  max-width: 100%;
+  padding: 20px;
 }
 
 .site-footer nav {
@@ -133,11 +158,11 @@ body {
 }
 
 .site-footer a {
-  margin: 0 8px;
-  color: #000;
+  margin: 4px 8px;
+  color: #ffffff;
   text-decoration: none;
 }
 
 .site-footer a:hover {
-  color: #666666;
+  color: #e3a535;
 }
