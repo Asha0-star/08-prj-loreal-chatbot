@@ -25,6 +25,12 @@ body {
   padding-top: 50px;
 }
 
+.logo {
+  display: block;
+  margin: 0 auto;
+  padding-bottom: 8px;
+  width: 300px; /* Adjust logo size */
+}
 .site-title {
   font-size: 22px;
   font-weight: 500;
@@ -38,7 +44,7 @@ body {
 
 .chat-window {
   height: 400px;
-  border: 1px solid transparent;
+  border: 2px solid transparent;
   border-image: linear-gradient(#000000, #e3a535) 1;
   padding: 20px;
   font-size: 18px;
@@ -46,6 +52,9 @@ body {
   overflow-y: auto;
   background: #fafafa;
   white-space: pre-line;
+  display: flex;
+  flex-direction: column; /* Stack messages vertically */
+  gap: 10px; /* Add space between message bubbles */
 }
 
 /* messages */
@@ -54,16 +63,20 @@ body {
   padding: 10px; /* Padding around each message */
   border-radius: 8px; /* Rounded corners for better aesthetics */
   line-height: 1.5;
+  max-width: 70%; /* Limit message bubble width */
+  word-wrap: break-word; /* Wrap long words */
 }
 
 .msg.user {
+  align-self: flex-end; /* Align user messages to the right */
   background-color: #f0f0f0; /* Light background for user messages */
   color: #000; /* Black text for user messages */
 }
 
 .msg.ai {
+  align-self: flex-start; /* Align bot messages to the left */
   background-color: #e8e8e8; /* Slightly darker background for chatbot messages */
-  color: #666666; /* Gray text for chatbot messages */
+  color: #000000; /* Gray text for chatbot messages */
 }
 
 /* Add spacing for labels */

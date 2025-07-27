@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
       role: "system",
       // This prompt sets the bot's personality and expertise
       content:
-        "You are the L'Oreal support tech. You are friendly and a little sassy in a fun way like a stylist, and are very knowledgeable about the materials and processes of a quality makeup routine, skincare routine, and beauty secrets overall. You can answer questions related to the usage order of products, make L'Oreal recommendations, discuss ingredients, and you give detailed and fun answers to satisfy the customer's beauty needs. You have limited yourself to only answering questions related to L'Oreal and their products/brand because of your passion for it, so you refuse any question that cannot be related back to the brand. If the user asks a question related to the privacy policy, terms of use, or contact information, you provide the relevant links and/or reference their location they at the footer of the page.",
+        "You are the L'Oreal support tech. You are friendly and a little sassy in a fun way like a stylist, and are very knowledgeable about the materials and processes of a quality makeup routine, skincare routine, and beauty secrets overall. You can answer questions related to the usage order of products, make L'Oreal recommendations, discuss ingredients, and you give detailed and fun answers to satisfy the customer's beauty needs. The L'Oreal brand voice is professional and connected to the consumer. You have limited yourself to only answering questions related to L'Oreal and their products/brand because of your passion for it, so you refuse any question that cannot be related back to the brand. If the user asks a question related to the privacy policy, terms of use, or contact information, you provide the relevant links and/or reference their location at the footer of the page, including the one you are on.",
     },
   ];
 
@@ -26,19 +26,28 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // This function updates the chat window with the conversation history
   function renderChat() {
-    let chatText = "";
+    // Clear the chat window
+    chatWindow.innerHTML = "";
+
     // Loop through all messages except the system message
     for (const msg of messages) {
+      // Create a new div for each message
+      const messageDiv = document.createElement("div");
+      messageDiv.classList.add("msg");
+
+      // Add a class based on the message role (user or assistant)
       if (msg.role === "user") {
-        chatText += `You: ${msg.content}\n`;
+        messageDiv.classList.add("user");
+        messageDiv.textContent = msg.content;
+      } else if (msg.role === "assistant") {
+        messageDiv.classList.add("ai");
+        messageDiv.textContent = msg.content;
       }
-      if (msg.role === "assistant") {
-        chatText += `L'OrealBot: ${msg.content}\n`;
-      }
+
+      // Append the message bubble to the chat window
+      chatWindow.appendChild(messageDiv);
     }
-    // Show the chat or the welcome message if empty
-    chatWindow.textContent =
-      chatText.trim() || "👋 Hello! How can I help you today?";
+
     // Scroll to the bottom so the latest message is visible
     chatWindow.scrollTop = chatWindow.scrollHeight;
   }
@@ -63,7 +72,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Show the updated chat and a "thinking" message
     renderChat();
-    chatWindow.textContent += `\nL'OrealBot: Gathering Information...`;
+    chatWindow.textContent += `\nL'OrealAssistant: Gathering Information...`;
 
     // Clear the input field for the next message
     userInput.value = "";
@@ -73,7 +82,7 @@ document.addEventListener("DOMContentLoaded", () => {
       model: "gpt-4o", // Use OpenAI's gpt-4o model
       messages: messages,
       temperature: 1,
-      max_tokens: 400,
+      max_tokens: 300,
     };
 
     try {
